@@ -1,0 +1,3119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cake Bliss | Advanced Billing System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      :root {
+        --primary: #ff7bac;
+        --secondary: #ffb347;
+        --accent: #9d4edd;
+        --light: #fff9fb;
+        --dark: #333333;
+        --success: #4caf50;
+        --warning: #ff9800;
+        --danger: #f44336;
+      }
+
+      body {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        color: var(--dark);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* Header */
+      header {
+        background-color: white;
+        border-radius: 20px;
+        padding: 25px 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 28px;
+      }
+
+      .logo-text h1 {
+        color: var(--primary);
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+
+      .logo-text p {
+        color: var(--dark);
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      nav ul {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--dark);
+        font-weight: 600;
+        font-size: 16px;
+        padding: 8px 15px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+
+      nav a:hover,
+      nav a.active {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      /* Main Content */
+      .main-content {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      /* Billing Form */
+      .billing-card {
+        background-color: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        flex: 2;
+        min-width: 300px;
+      }
+
+      .billing-card h2 {
+        color: var(--primary);
+        margin-bottom: 10px;
+        font-size: 26px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 15px;
+      }
+
+      .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 25px;
+      }
+
+      .form-group {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #eee;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 123, 172, 0.2);
+      }
+
+      /* Items Table */
+      .items-section {
+        margin: 30px 0;
+        border: 2px solid #f0f0f0;
+        border-radius: 15px;
+        padding: 20px;
+      }
+
+      .items-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .items-header h3 {
+        color: var(--primary);
+        font-size: 20px;
+      }
+
+      .add-item-btn {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+      }
+
+      .add-item-btn:hover {
+        background-color: #8a2be2;
+        transform: translateY(-2px);
+      }
+
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .items-table th {
+        background-color: #f8f9fa;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--dark);
+        border-bottom: 2px solid #eee;
+      }
+
+      .items-table td {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+      }
+
+      .item-row input,
+      .item-row select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .item-row .item-qty {
+        width: 80px;
+      }
+
+      .item-row .item-price {
+        width: 120px;
+      }
+
+      .remove-item {
+        color: var(--danger);
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        transition: all 0.3s;
+      }
+
+      .remove-item:hover {
+        background-color: rgba(244, 67, 54, 0.1);
+      }
+
+      /* Summary Section */
+      .summary-card {
+        background-color: #fff9fb;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 30px;
+        border-left: 5px solid var(--accent);
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .summary-row.total {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--accent);
+        border-bottom: none;
+        margin-top: 10px;
+        padding-top: 20px;
+        border-top: 2px solid #eee;
+      }
+
+      .summary-label {
+        font-weight: 600;
+      }
+
+      /* Product Catalog Sidebar */
+      .product-catalog {
+        flex: 1;
+        min-width: 300px;
+      }
+
+      .catalog-card {
+        background-color: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+
+      .catalog-card h3 {
+        color: var(--primary);
+        margin-bottom: 20px;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .product-category {
+        margin-bottom: 25px;
+      }
+
+      .category-title {
+        color: var(--secondary);
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #ffecd2;
+      }
+
+      .product-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+      }
+
+      .product-item:hover {
+        background-color: #fff9fb;
+        transform: translateX(5px);
+      }
+
+      .product-item .product-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, var(--secondary), var(--primary));
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+        margin-right: 12px;
+      }
+
+      .product-details {
+        flex: 1;
+      }
+
+      .product-details h4 {
+        color: var(--dark);
+        margin-bottom: 3px;
+        font-size: 14px;
+      }
+
+      .product-details .product-code {
+        font-size: 11px;
+        color: #666;
+        font-family: monospace;
+        background-color: #f5f5f5;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .product-price {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 16px;
+      }
+
+      /* Recent Orders */
+      .recent-orders {
+        background-color: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      .orders-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .orders-header h3 {
+        color: var(--primary);
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .order-count {
+        background-color: var(--primary);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-weight: 600;
+      }
+
+      .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .order-item:last-child {
+        border-bottom: none;
+      }
+
+      .order-products {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 14px;
+      }
+
+      .order-price {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      /* Notification */
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transform: translateX(150%);
+        transition: transform 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .notification.show {
+        transform: translateX(0);
+      }
+
+      .notification.success {
+        background-color: var(--success);
+      }
+
+      .notification.error {
+        background-color: var(--danger);
+      }
+
+      /* Database Status */
+      .db-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+
+      .db-status.connected {
+        background-color: rgba(76, 175, 80, 0.1);
+        color: var(--success);
+      }
+
+      .db-status.disconnected {
+        background-color: rgba(244, 67, 54, 0.1);
+        color: var(--danger);
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .status-dot.connected {
+        background-color: var(--success);
+        animation: pulse 2s infinite;
+      }
+
+      .status-dot.disconnected {
+        background-color: var(--danger);
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        padding: 20px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+      }
+
+      .footer-links a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      /* Buttons */
+      .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 16px 30px;
+        border-radius: 12px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        flex: 1;
+        min-width: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #ff5a9c;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 123, 172, 0.4);
+      }
+
+      .btn-secondary {
+        background-color: var(--secondary);
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background-color: #ff9e1f;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 179, 71, 0.4);
+      }
+
+      /* Returning Customer Badge */
+      .returning-customer-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background-color: rgba(76, 175, 80, 0.1);
+        color: var(--success);
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .returning-customer-badge:hover {
+        background-color: rgba(76, 175, 80, 0.2);
+        transform: scale(1.05);
+      }
+
+      /* Responsive */
+      @media (max-width: 992px) {
+        .main-content {
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .items-table {
+          display: block;
+          overflow-x: auto;
+        }
+
+        .form-row {
+          flex-direction: column;
+        }
+      }
+      /* Keyboard navigation styles */
+      .keyboard-focus {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px !important;
+        box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.3) !important;
+        position: relative;
+        z-index: 10;
+      }
+
+      .current-item-row {
+        background-color: rgba(157, 78, 221, 0.1) !important;
+        border: 2px solid var(--accent) !important;
+      }
+
+      .current-item-field {
+        background-color: rgba(157, 78, 221, 0.2) !important;
+        border-color: var(--accent) !important;
+        outline: 2px solid var(--accent) !important;
+      }
+
+      /* Pulse animation for status dot */
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      /* Add to your CSS */
+      .keyboard-focus {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px !important;
+        box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.3) !important;
+        position: relative;
+        z-index: 10;
+      }
+
+      .current-item-row {
+        background-color: rgba(157, 78, 221, 0.1) !important;
+        border: 2px solid var(--accent) !important;
+      }
+
+      .current-item-field {
+        background-color: rgba(157, 78, 221, 0.2) !important;
+        border-color: var(--accent) !important;
+        outline: 2px solid var(--accent) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header>
+        <div class="logo-container">
+          <div class="logo">
+            <i class="fas fa-birthday-cake"></i>
+          </div>
+          <div class="logo-text">
+            <h1>Cake Bliss</h1>
+            <p>Advanced Billing System with Multiple Items</p>
+            <div id="dbStatus" class="db-status disconnected">
+              <div class="status-dot disconnected"></div>
+              <span>Supabase: Disconnected</span>
+            </div>
+          </div>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="#" class="active"
+                ><i class="fas fa-receipt"></i> Billing</a
+              >
+            </li>
+            <li>
+              <a href="#" id="viewCustomersBtn"
+                ><i class="fas fa-users"></i> Customers</a
+              >
+            </li>
+            <li>
+              <a href="reports.html"
+                ><i class="fas fa-chart-bar"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      <div class="main-content">
+        <!-- Billing Form -->
+        <div class="billing-card">
+          <h2><i class="fas fa-cash-register"></i> Create New Bill</h2>
+          <p class="form-subtitle">
+            Enter customer details and add multiple items
+          </p>
+
+          <form id="billingForm">
+            <!-- Customer Information -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="purchaserPhone"
+                  ><i class="fas fa-phone"></i> Purchaser Phone *</label
+                >
+                <div style="display: flex; gap: 10px">
+                  <input
+                    type="tel"
+                    id="purchaserPhone"
+                    placeholder="1234567890"
+                    required
+                    style="flex: 1"
+                  />
+                  <button
+                    type="button"
+                    id="checkCustomerBtn"
+                    class="btn"
+                    style="
+                      padding: 10px 15px;
+                      background-color: #f0f0f0;
+                      min-width: auto;
+                    "
+                  >
+                    <i class="fas fa-search"></i> Check
+                  </button>
+                </div>
+                <div
+                  id="customerInfo"
+                  style="margin-top: 10px; display: none"
+                ></div>
+              </div>
+              <div class="form-group">
+                <label for="purchaserName"
+                  ><i class="fas fa-user"></i> Purchaser Name *</label
+                >
+                <input
+                  type="text"
+                  id="purchaserName"
+                  placeholder="Enter full name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="birthdayPersonName"
+                  ><i class="fas fa-birthday-cake"></i> Birthday Person Name
+                  *</label
+                >
+                <input
+                  type="text"
+                  id="birthdayPersonName"
+                  placeholder="Name of person celebrating"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="birthdayPersonPhone"
+                  ><i class="fas fa-mobile-alt"></i> Birthday Person
+                  Phone</label
+                >
+                <input
+                  type="tel"
+                  id="birthdayPersonPhone"
+                  placeholder="Optional"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="purchaserBirthdate"
+                  ><i class="fas fa-calendar-day"></i> Purchaser
+                  Birthdate</label
+                >
+                <input type="date" id="purchaserBirthdate" />
+              </div>
+              <div class="form-group">
+                <label for="birthdayPersonBirthdate"
+                  ><i class="fas fa-calendar-check"></i> Birthday Person
+                  Birthdate *</label
+                >
+                <input type="date" id="birthdayPersonBirthdate" required />
+              </div>
+            </div>
+
+            <!-- Items Section -->
+            <div class="items-section">
+              <div class="items-header">
+                <h3><i class="fas fa-shopping-cart"></i> Items in Order</h3>
+                <button type="button" id="addItemBtn" class="add-item-btn">
+                  <i class="fas fa-plus"></i> Add Item
+                </button>
+              </div>
+
+              <table class="items-table">
+                <thead>
+                  <tr>
+                    <th width="40%">Product</th>
+                    <th width="15%">Product Code</th>
+                    <th width="15%">Quantity</th>
+                    <th width="20%">Price</th>
+                    <th width="20%">Total</th>
+                    <th width="5%"></th>
+                  </tr>
+                </thead>
+                <tbody id="itemsTableBody">
+                  <!-- Items will be added here dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="summary-card">
+              <div class="summary-row">
+                <span class="summary-label">Subtotal:</span>
+                <span id="subtotal">₹0.00</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Discount:</span>
+                <span id="discountAmount">₹0.00</span>
+              </div>
+              <div class="summary-row total">
+                <span>GRAND TOTAL:</span>
+                <span id="grandTotal">₹0.00</span>
+              </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="form-row" style="margin-top: 20px">
+              <div class="form-group">
+                <label for="couponCode"
+                  ><i class="fas fa-tag"></i> Coupon Code</label
+                >
+                <input
+                  type="text"
+                  id="couponCode"
+                  placeholder="Enter coupon code if any"
+                />
+              </div>
+              <div class="form-group">
+                <label for="orderNotes"
+                  ><i class="fas fa-sticky-note"></i> Order Notes</label
+                >
+                <input
+                  type="text"
+                  id="orderNotes"
+                  placeholder="Any special instructions?"
+                />
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+              <button type="submit" class="btn btn-primary" id="submitBill">
+                <i class="fas fa-file-invoice-dollar"></i> Generate & Save Bill
+                (Ctrl+S)
+              </button>
+              <button type="button" class="btn btn-secondary" id="resetForm">
+                <i class="fas fa-redo"></i> Reset Form (Ctrl+R)
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Product Catalog -->
+        <div class="product-catalog">
+          <div class="catalog-card">
+            <h3><i class="fas fa-boxes"></i> Product Catalog</h3>
+
+            <!-- Cakes Category -->
+            <div class="product-category">
+              <div class="category-title">
+                <i class="fas fa-birthday-cake"></i> Cakes
+              </div>
+              <div
+                class="product-item"
+                data-code="CK-001"
+                data-name="Chocolate Fudge Delight"
+                data-price="45.99"
+              >
+                <div class="product-icon"><i class="fas fa-cookie"></i></div>
+                <div class="product-details">
+                  <h4>Chocolate Fudge Delight</h4>
+                  <div class="product-code">CK-001</div>
+                </div>
+                <div class="product-price">₹45.99</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="CK-002"
+                data-name="Red Velvet Supreme"
+                data-price="52.50"
+              >
+                <div class="product-icon">
+                  <i class="fas fa-birthday-cake"></i>
+                </div>
+                <div class="product-details">
+                  <h4>Red Velvet Supreme</h4>
+                  <div class="product-code">CK-002</div>
+                </div>
+                <div class="product-price">₹52.50</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="CK-003"
+                data-name="Vanilla Dream"
+                data-price="39.50"
+              >
+                <div class="product-icon"><i class="fas fa-ice-cream"></i></div>
+                <div class="product-details">
+                  <h4>Vanilla Dream Cake</h4>
+                  <div class="product-code">CK-003</div>
+                </div>
+                <div class="product-price">₹39.50</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="CK-004"
+                data-name="Strawberry Heaven"
+                data-price="42.25"
+              >
+                <div class="product-icon">
+                  <i class="fas fa-stroopwafel"></i>
+                </div>
+                <div class="product-details">
+                  <h4>Strawberry Heaven</h4>
+                  <div class="product-code">CK-004</div>
+                </div>
+                <div class="product-price">₹42.25</div>
+              </div>
+            </div>
+
+            <!-- Pastries Category -->
+            <div class="product-category">
+              <div class="category-title">
+                <i class="fas fa-cookie-bite"></i> Pastries
+              </div>
+              <div
+                class="product-item"
+                data-code="PT-001"
+                data-name="Butter Croissant"
+                data-price="4.50"
+              >
+                <div class="product-icon">
+                  <i class="fas fa-bread-slice"></i>
+                </div>
+                <div class="product-details">
+                  <h4>Butter Croissant</h4>
+                  <div class="product-code">PT-001</div>
+                </div>
+                <div class="product-price">₹4.50</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="PT-002"
+                data-name="Cheese Danish"
+                data-price="5.25"
+              >
+                <div class="product-icon"><i class="fas fa-pie-chart"></i></div>
+                <div class="product-details">
+                  <h4>Cheese Danish</h4>
+                  <div class="product-code">PT-002</div>
+                </div>
+                <div class="product-price">₹5.25</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="PT-003"
+                data-name="Chocolate Éclair"
+                data-price="6.75"
+              >
+                <div class="product-icon">
+                  <i class="fas fa-stroopwafel"></i>
+                </div>
+                <div class="product-details">
+                  <h4>Chocolate Éclair</h4>
+                  <div class="product-code">PT-003</div>
+                </div>
+                <div class="product-price">₹6.75</div>
+              </div>
+            </div>
+
+            <!-- Decorations Category -->
+            <div class="product-category">
+              <div class="category-title">
+                <i class="fas fa-gift"></i> Decorations
+              </div>
+              <div
+                class="product-item"
+                data-code="DC-001"
+                data-name="Birthday Candles"
+                data-price="2.99"
+              >
+                <div class="product-icon">
+                  <i class="fas fa-candle-holder"></i>
+                </div>
+                <div class="product-details">
+                  <h4>Birthday Candles (Set of 12)</h4>
+                  <div class="product-code">DC-001</div>
+                </div>
+                <div class="product-price">₹2.99</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="DC-002"
+                data-name="Edible Glitter"
+                data-price="8.50"
+              >
+                <div class="product-icon"><i class="fas fa-sparkles"></i></div>
+                <div class="product-details">
+                  <h4>Edible Glitter Jar</h4>
+                  <div class="product-code">DC-002</div>
+                </div>
+                <div class="product-price">₹8.50</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="DC-003"
+                data-name="Cake Topper"
+                data-price="15.99"
+              >
+                <div class="product-icon"><i class="fas fa-crown"></i></div>
+                <div class="product-details">
+                  <h4>Custom Cake Topper</h4>
+                  <div class="product-code">DC-003</div>
+                </div>
+                <div class="product-price">₹15.99</div>
+              </div>
+            </div>
+
+            <!-- Beverages Category -->
+            <div class="product-category">
+              <div class="category-title">
+                <i class="fas fa-coffee"></i> Beverages
+              </div>
+              <div
+                class="product-item"
+                data-code="BV-001"
+                data-name="Fresh Brewed Coffee"
+                data-price="3.50"
+              >
+                <div class="product-icon"><i class="fas fa-coffee"></i></div>
+                <div class="product-details">
+                  <h4>Fresh Brewed Coffee</h4>
+                  <div class="product-code">BV-001</div>
+                </div>
+                <div class="product-price">₹3.50</div>
+              </div>
+              <div
+                class="product-item"
+                data-code="BV-002"
+                data-name="Soft Drink Can"
+                data-price="2.00"
+              >
+                <div class="product-icon">
+                  <i class="fas fa-wine-bottle"></i>
+                </div>
+                <div class="product-details">
+                  <h4>Soft Drink Can</h4>
+                  <div class="product-code">BV-002</div>
+                </div>
+                <div class="product-price">₹2.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Orders -->
+          <div class="recent-orders">
+            <div class="orders-header">
+              <h3><i class="fas fa-history"></i> Recent Bills</h3>
+              <div class="order-count" id="recentBillsCount">0</div>
+            </div>
+            <div id="recentBillsList">
+              <div class="order-item">
+                <div class="order-products">Loading bills...</div>
+                <div class="order-price">₹0.00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>&copy; 2023 Cake Bliss Billing System. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#" id="setupDbBtn"
+            ><i class="fas fa-database"></i> Setup Database</a
+          >
+          <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+          <a href="#"><i class="fas fa-print"></i> Print</a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+      <i class="fas fa-check-circle"></i>
+      <span>Notification message</span>
+    </div>
+
+    <!-- Database Setup Modal -->
+    <div
+      id="dbInfoModal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: white;
+          padding: 30px;
+          border-radius: 20px;
+          max-width: 500px;
+          width: 90%;
+        "
+      >
+        <h3 style="color: var(--primary); margin-bottom: 20px">
+          <i class="fas fa-database"></i> Connect to Supabase
+        </h3>
+        <p style="margin-bottom: 15px">
+          To connect to your existing <strong>cake-bills</strong> table:
+        </p>
+
+        <div
+          style="
+            margin-bottom: 20px;
+            font-size: 13px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+          "
+        >
+          <strong>Your table structure:</strong><br />
+          id, bill_number, purchaser_name, birthday_person_name,
+          purchaser_birthdate, birthday_person_birthdate, purchaser_phone,
+          birthday_person_phone, cake_name, cake_price, total_price,
+          coupon_code, created_at, is_returning_customer, last_visit_date
+        </div>
+
+        <p style="margin-bottom: 20px">
+          The system will store multiple items as a JSON array in the
+          <strong>cake_name</strong> field.
+        </p>
+
+        <div style="margin-top: 30px">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600"
+            >Supabase URL:</label
+          >
+          <input
+            type="text"
+            id="sbUrlInput"
+            style="
+              width: 100%;
+              padding: 10px;
+              border: 2px solid #eee;
+              border-radius: 8px;
+              margin-bottom: 15px;
+            "
+            placeholder="https://your-project.supabase.co"
+          />
+
+          <label style="display: block; margin-bottom: 5px; font-weight: 600"
+            >Supabase Anon Key:</label
+          >
+          <input
+            type="text"
+            id="sbKeyInput"
+            style="
+              width: 100%;
+              padding: 10px;
+              border: 2px solid #eee;
+              border-radius: 8px;
+            "
+            placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          />
+
+          <div style="display: flex; gap: 10px; margin-top: 20px">
+            <button id="saveDbConfig" class="btn btn-primary" style="flex: 1">
+              Save Configuration
+            </button>
+            <button
+              id="closeDbModal"
+              class="btn"
+              style="flex: 1; background-color: #f0f0f0"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <datalist id="globalProductNames"></datalist>
+    <datalist id="globalProductCodes"></datalist>
+    <script>
+      // Supabase Configuration
+      let supabase = null;
+      let isConnected = false;
+      let lastCustomerData = null;
+      let allProducts = []; // Store products from Supabase
+      let currentFieldIndex = 0;
+      let formFields = [];
+      let currentItemRow = null;
+      let currentItemField = 0; // 0=name, 1=code, 2=qty, 3=price
+      let itemRows = [];
+
+      // Default configuration (using your credentials)
+      const DEFAULT_CONFIG = {
+        supabaseUrl: "https://vdbwzmutxjonnpfwfpbn.supabase.co",
+        supabaseKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkYnd6bXV0eGpvbm5wZndmcGJuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5OTcwMjQsImV4cCI6MjA4MDU3MzAyNH0.n0ERxgLgYU1Tvw5QONihv1C3A7o7rcxrcn5MjZ5UnEM",
+      };
+
+      // Load configuration from localStorage or use defaults
+      let config =
+        JSON.parse(localStorage.getItem("cakeBlissConfig")) || DEFAULT_CONFIG;
+
+      // ==================== KEYBOARD NAVIGATION SETUP ====================
+      function initializeKeyboardNavigation() {
+        console.log("Initializing keyboard navigation...");
+
+        // Collect all form fields for tab navigation
+        formFields = Array.from(
+          document.querySelectorAll(
+            "#purchaserPhone, #checkCustomerBtn, #purchaserName, #birthdayPersonName, #birthdayPersonPhone, #purchaserBirthdate, #birthdayPersonBirthdate, #couponCode, #orderNotes, #addItemBtn, #submitBill, #resetForm"
+          )
+        ).filter((el) => el && el.offsetParent !== null);
+
+        // Add global keyboard event listener
+        document.addEventListener("keydown", handleGlobalKeyboard);
+
+        console.log(
+          "Keyboard navigation initialized with",
+          formFields.length,
+          "fields"
+        );
+      }
+
+      function handleGlobalKeyboard(e) {
+        // Don't interfere with text input or textarea
+        if (
+          (e.target.tagName === "INPUT" && e.target.type === "text") ||
+          (e.target.tagName === "INPUT" && e.target.type === "tel") ||
+          (e.target.tagName === "INPUT" && e.target.type === "number") ||
+          (e.target.tagName === "INPUT" && e.target.type === "date") ||
+          e.target.tagName === "TEXTAREA"
+        ) {
+          // Let the input-specific handlers deal with Enter key
+          handleInputKeyboard(e);
+          return;
+        }
+
+        // Global shortcuts (work everywhere)
+        if (e.ctrlKey || e.metaKey) {
+          handleControlShortcuts(e);
+          return;
+        }
+
+        if (e.altKey) {
+          handleAltShortcuts(e);
+          return;
+        }
+
+        // Function keys
+        if (e.key.startsWith("F")) {
+          handleFunctionKeys(e);
+          return;
+        }
+
+        // Navigation keys
+        switch (e.key) {
+          case "Tab":
+            e.preventDefault();
+            if (e.shiftKey) {
+              moveToPreviousField();
+            } else {
+              moveToNextField();
+            }
+            break;
+
+          case "ArrowDown":
+            e.preventDefault();
+            if (currentItemRow) {
+              navigateItemRows("down");
+            } else {
+              moveToNextField();
+            }
+            break;
+
+          case "ArrowUp":
+            e.preventDefault();
+            if (currentItemRow) {
+              navigateItemRows("up");
+            } else {
+              moveToPreviousField();
+            }
+            break;
+
+          case "ArrowRight":
+            e.preventDefault();
+            if (currentItemRow) {
+              navigateItemFields("right");
+            }
+            break;
+
+          case "ArrowLeft":
+            e.preventDefault();
+            if (currentItemRow) {
+              navigateItemFields("left");
+            }
+            break;
+
+          case "Escape":
+            e.preventDefault();
+            clearCurrentField();
+            break;
+
+          case "Insert":
+            e.preventDefault();
+            addItemRow();
+            break;
+
+          case "Delete":
+            e.preventDefault();
+            if (currentItemRow && confirm("Delete current item?")) {
+              removeItem(currentItemRow.id);
+            }
+            break;
+        }
+      }
+
+      // ====== FIXED: Only ONE handleInputKeyboard function ======
+      function handleInputKeyboard(e) {
+        switch (e.key) {
+          case "Enter":
+            // Only handle Enter if we're in specific fields where we want special behavior
+            if (e.target.id === "purchaserPhone" && !e.shiftKey) {
+              e.preventDefault();
+              manualCheckCustomer();
+            } else if (e.target.classList.contains("item-price")) {
+              // In price field, Enter adds new item
+              e.preventDefault();
+              addItemRow();
+            } else if (
+              e.target.type === "button" ||
+              e.target.type === "submit"
+            ) {
+              // For buttons, let the click handler work
+              return;
+            } else {
+              // For all other inputs, move to next field
+              e.preventDefault();
+              moveToNextField();
+            }
+            break;
+
+          case "Tab":
+            e.preventDefault();
+            if (e.shiftKey) {
+              moveToPreviousField();
+            } else {
+              moveToNextField();
+            }
+            break;
+
+          case "Escape":
+            e.preventDefault();
+            e.target.value = "";
+            break;
+
+          case "ArrowDown":
+            if (
+              e.target.classList.contains("item-name") ||
+              e.target.classList.contains("item-code")
+            ) {
+              // Allow default behavior for datalist dropdown
+              return;
+            }
+            e.preventDefault();
+            if (currentItemRow) {
+              navigateItemRows("down");
+            } else {
+              moveToNextField();
+            }
+            break;
+
+          case "ArrowUp":
+            if (
+              e.target.classList.contains("item-name") ||
+              e.target.classList.contains("item-code")
+            ) {
+              // Allow default behavior for datalist dropdown
+              return;
+            }
+            e.preventDefault();
+            if (currentItemRow) {
+              navigateItemRows("up");
+            } else {
+              moveToPreviousField();
+            }
+            break;
+        }
+      }
+
+      function handleControlShortcuts(e) {
+        switch (e.key.toLowerCase()) {
+          case "s": // Save/Create bill
+            e.preventDefault();
+            document.getElementById("submitBill")?.click();
+            break;
+
+          case "r": // Reset form
+            e.preventDefault();
+            document.getElementById("resetForm")?.click();
+            break;
+
+          case "n": // New item
+            e.preventDefault();
+            addItemRow();
+            break;
+
+          case "d": // Duplicate current item
+            e.preventDefault();
+            duplicateCurrentItem();
+            break;
+
+          case "f": // Find customer
+            e.preventDefault();
+            manualCheckCustomer();
+            break;
+
+          case "p": // Print/View receipt
+            e.preventDefault();
+            showKeyboardHelp();
+            break;
+
+          case "h": // Help
+            e.preventDefault();
+            showKeyboardHelp();
+            break;
+
+          case "l": // Load recent bills
+            e.preventDefault();
+            loadRecentBills();
+            showNotification("Recent bills refreshed", "info");
+            break;
+
+          case "1": // Focus on phone field
+            e.preventDefault();
+            focusField("purchaserPhone");
+            break;
+
+          case "2": // Focus on name field
+            e.preventDefault();
+            focusField("purchaserName");
+            break;
+
+          case "3": // Add new item
+            e.preventDefault();
+            addItemRow();
+            break;
+        }
+      }
+
+      function handleAltShortcuts(e) {
+        switch (
+          e.key.toLowerCase() // Use lowercase to match both cases
+        ) {
+          case "1": // Go to phone field
+            e.preventDefault();
+            focusField("purchaserPhone");
+            break;
+
+          case "2": // Go to purchaser name
+            e.preventDefault();
+            focusField("purchaserName");
+            break;
+
+          case "3": // Go to birthday person name
+            e.preventDefault();
+            focusField("birthdayPersonName");
+            break;
+
+          case "4": // Go to birthday person phone
+            e.preventDefault();
+            focusField("birthdayPersonPhone");
+            break;
+
+          case "5": // Add item
+            e.preventDefault();
+            addItemRow();
+            break;
+
+          case "6": // Go to discount field
+            e.preventDefault();
+            focusField("couponCode");
+            break;
+
+          case "7": // Submit bill
+            e.preventDefault();
+            document.getElementById("submitBill")?.click();
+            break;
+
+          case "8": // Reset form
+            e.preventDefault();
+            document.getElementById("resetForm")?.click();
+            break;
+
+          case "9": // Check customer
+            e.preventDefault();
+            manualCheckCustomer();
+            break;
+
+          case "0": // Database setup
+            e.preventDefault();
+            document.getElementById("setupDbBtn")?.click();
+            break;
+
+          case "d": // Discount field (new shortcut)
+            e.preventDefault();
+            focusField("couponCode");
+            break;
+
+          case "h": // Help
+            e.preventDefault();
+            showKeyboardHelp();
+            break;
+        }
+      }
+
+      function handleFunctionKeys(e) {
+        e.preventDefault();
+        switch (e.key) {
+          case "F1": // Help
+            showKeyboardHelp();
+            break;
+
+          case "F2": // Check customer
+            manualCheckCustomer();
+            break;
+
+          case "F3": // Add item
+            addItemRow();
+            break;
+
+          case "F4": // Duplicate item
+            duplicateCurrentItem();
+            break;
+
+          case "F5": // Refresh products
+            refreshProducts();
+            break;
+
+          case "F6": // Clear current field
+            clearCurrentField();
+            break;
+
+          case "F7": // Today's date in birthday field
+            setTodaysDate();
+            break;
+
+          case "F8": // Repeat last customer
+            repeatLastCustomer();
+            break;
+
+          case "F9": // Quick save
+            document.getElementById("submitBill")?.click();
+            break;
+
+          case "F10": // Quick reset
+            document.getElementById("resetForm")?.click();
+            break;
+
+          case "F11": // Toggle fullscreen
+            toggleFullscreen();
+            break;
+
+          case "F12": // Developer tools (let default)
+            return;
+        }
+      }
+
+      function moveToNextField() {
+        removeFocusIndicators();
+
+        if (currentItemRow) {
+          // If in item table, move to next item field
+          if (currentItemField < 3) {
+            currentItemField++;
+            focusCurrentItemField();
+          } else {
+            // Last field in item row, go to Add Item button
+            currentItemRow = null;
+            currentItemField = 0;
+            focusField("addItemBtn");
+          }
+        } else {
+          // Move to next form field (skip item table)
+          currentFieldIndex = (currentFieldIndex + 1) % formFields.length;
+          const nextField = formFields[currentFieldIndex];
+
+          // Skip item table fields (they're handled separately)
+          if (nextField && nextField.id === "addItemBtn") {
+            // If next is Add Item button, that's fine
+            nextField.focus();
+            nextField.classList.add("keyboard-focus");
+          } else if (nextField) {
+            nextField.focus();
+            nextField.classList.add("keyboard-focus");
+            if (nextField.tagName === "INPUT" && nextField.type !== "button") {
+              setTimeout(() => nextField.select(), 10);
+            }
+          }
+        }
+      }
+
+      function moveToPreviousField() {
+        removeFocusIndicators();
+
+        if (currentItemRow) {
+          // If in item table, move to previous item field
+          if (currentItemField > 0) {
+            currentItemField--;
+            focusCurrentItemField();
+          } else {
+            // First field in item row, go to previous form field
+            currentItemRow = null;
+            currentItemField = 0;
+            moveToPreviousFieldInForm();
+          }
+        } else {
+          moveToPreviousFieldInForm();
+        }
+      }
+
+      function moveToPreviousFieldInForm() {
+        // Move to previous form field
+        currentFieldIndex =
+          currentFieldIndex > 0 ? currentFieldIndex - 1 : formFields.length - 1;
+        const prevField = formFields[currentFieldIndex];
+
+        if (prevField) {
+          prevField.focus();
+          prevField.classList.add("keyboard-focus");
+          if (prevField.tagName === "INPUT" && prevField.type !== "button") {
+            setTimeout(() => prevField.select(), 10);
+          }
+        }
+      }
+
+      function focusField(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          removeFocusIndicators();
+          field.focus();
+          field.classList.add("keyboard-focus");
+          if (field.tagName === "INPUT" && field.type !== "button") {
+            setTimeout(() => field.select(), 10);
+          }
+
+          // Update current field index
+          currentFieldIndex = formFields.findIndex((f) => f.id === fieldId);
+          if (currentFieldIndex === -1) currentFieldIndex = 0;
+        }
+      }
+
+      function removeFocusIndicators() {
+        document.querySelectorAll(".keyboard-focus").forEach((el) => {
+          el.classList.remove("keyboard-focus");
+        });
+        document.querySelectorAll(".current-item-row").forEach((el) => {
+          el.classList.remove("current-item-row");
+        });
+        document.querySelectorAll(".current-item-field").forEach((el) => {
+          el.classList.remove("current-item-field");
+        });
+      }
+
+      function clearCurrentField() {
+        const active = document.activeElement;
+        if (
+          active &&
+          (active.type === "text" ||
+            active.type === "tel" ||
+            active.type === "number")
+        ) {
+          active.value = "";
+          showNotification("Field cleared", "info");
+        }
+      }
+
+      function setTodaysDate() {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("birthdayPersonBirthdate").value = today;
+        showNotification("Today's date set in birthday field", "info");
+      }
+
+      function repeatLastCustomer() {
+        if (lastCustomerData) {
+          autoFillCustomerForm(lastCustomerData);
+          showNotification("Last customer details repeated", "success");
+        } else {
+          showNotification("No previous customer found", "warning");
+        }
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+
+      function duplicateCurrentItem() {
+        if (currentItemRow) {
+          const name = currentItemRow.querySelector(".item-name").value;
+          const code = currentItemRow.querySelector(".item-code").value;
+          const price =
+            parseFloat(currentItemRow.querySelector(".item-price").value) || 0;
+          const qty =
+            parseInt(currentItemRow.querySelector(".item-qty").value) || 1;
+
+          addItemRow(code, name, price, qty);
+          showNotification("Item duplicated", "success");
+        }
+      }
+
+      function navigateItemRows(direction) {
+        updateItemRows();
+
+        if (itemRows.length === 0) return;
+
+        let currentIndex = currentItemRow
+          ? itemRows.indexOf(currentItemRow)
+          : -1;
+
+        if (direction === "down") {
+          if (currentIndex < itemRows.length - 1) {
+            currentIndex++;
+          } else {
+            // Exit item table, go to next form field
+            currentItemRow = null;
+            currentItemField = 0;
+            moveToNextField();
+            return;
+          }
+        } else {
+          // up
+          if (currentIndex > 0) {
+            currentIndex--;
+          } else {
+            // Exit item table, go to previous form field
+            currentItemRow = null;
+            currentItemField = 0;
+            moveToPreviousField();
+            return;
+          }
+        }
+
+        currentItemRow = itemRows[currentIndex];
+        currentItemField = 0;
+        highlightCurrentItem();
+        focusCurrentItemField();
+      }
+
+      function navigateItemFields(direction) {
+        if (!currentItemRow) return;
+
+        if (direction === "right") {
+          if (currentItemField < 3) {
+            currentItemField++;
+          }
+        } else {
+          // left
+          if (currentItemField > 0) {
+            currentItemField--;
+          }
+        }
+
+        focusCurrentItemField();
+      }
+
+      function updateItemRows() {
+        itemRows = Array.from(document.querySelectorAll(".item-row"));
+      }
+
+      function highlightCurrentItem() {
+        document.querySelectorAll(".item-row").forEach((row) => {
+          row.classList.remove("current-item-row");
+        });
+        if (currentItemRow) {
+          currentItemRow.classList.add("current-item-row");
+          currentItemRow.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+        }
+      }
+
+      function focusCurrentItemField() {
+        if (!currentItemRow) return;
+
+        const fields = [
+          currentItemRow.querySelector(".item-name"),
+          currentItemRow.querySelector(".item-code"),
+          currentItemRow.querySelector(".item-qty"),
+          currentItemRow.querySelector(".item-price"),
+        ];
+
+        document.querySelectorAll(".item-row input").forEach((input) => {
+          input.classList.remove("current-item-field");
+        });
+
+        if (fields[currentItemField]) {
+          fields[currentItemField].focus();
+          fields[currentItemField].classList.add("current-item-field");
+          if (fields[currentItemField].type !== "number") {
+            setTimeout(() => fields[currentItemField].select(), 10);
+          }
+        }
+
+        highlightCurrentItem();
+      }
+
+      function showKeyboardHelp() {
+        const helpText = `
+╔══════════════════════════════════════════════════════════════╗
+║                    🎂 CAKE BLISS - KEYBOARD SHORTCUTS 🎂    ║
+╠══════════════════════════════════════════════════════════════╣
+║ NAVIGATION:                                                  ║
+║   Tab / Shift+Tab  → Next/Previous field                     ║
+║   Enter            → Next field / Add new item               ║
+║   Esc              → Clear current field                     ║
+║   ↑↓←→             → Navigate items table                    ║
+║                                                              ║  
+║ ITEM TABLE:                                                  ║
+║   Enter in last field (price) → Add new item                 ║
+║   Insert                      → Add new item                 ║
+║   Delete                      → Delete current item          ║
+║   ↑↓                          → Move between rows            ║
+║   ←→                          → Move between fields in row   ║
+║                                                              ║  
+║ FUNCTION KEYS:                                               ║
+║   F1  → This help                                            ║
+║   F2  → Check customer                                       ║
+║   F3  → Add new item                                         ║
+║   F4  → Duplicate current item                               ║
+║   F5  → Refresh products                                     ║
+║   F6  → Clear field                                          ║
+║   F7  → Set today's date                                     ║
+║   F8  → Repeat last customer                                 ║
+║   F9  → Quick save (Submit)                                  ║
+║   F10 → Quick reset                                          ║
+║   F11 → Toggle fullscreen                                    ║
+║                                                              ║ 
+║ CONTROL SHORTCUTS (Ctrl+):                                   ║
+║   S  → Save/Submit bill                                      ║
+║   R  → Reset form                                            ║
+║   N  → New item                                              ║
+║   D  → Duplicate item                                        ║
+║   F  → Find customer                                         ║
+║   H  → Help                                                  ║
+║   1  → Phone field                                           ║
+║   2  → Name field                                            ║
+║   3  → Add item                                              ║
+║                                                              ║  
+║ ALT SHORTCUTS (Alt+):                                        ║
+║   1 → Phone field                                            ║
+║   2 → Purchaser name                                         ║
+║   3 → Birthday person name                                   ║
+║   4 → Birthday person phone                                  ║
+║   5 → Add new item                                           ║
+║   6 → Discount code field                                    ║
+║   7 → Submit bill                                            ║
+║   8 → Reset form                                             ║
+║   9 → Check customer                                         ║
+║   0 → Database setup                                         ║
+║   D → Discount code field                                    ║
+║   H → Help                                                   ║
+╚══════════════════════════════════════════════════════════════╝
+    `;
+
+        alert(helpText);
+      }
+
+      // ==================== SUPABASE & CORE FUNCTIONS ====================
+
+      // Initialize Supabase
+      async function initSupabase() {
+        if (config.supabaseUrl && config.supabaseKey) {
+          try {
+            supabase = window.supabase.createClient(
+              config.supabaseUrl,
+              config.supabaseKey
+            );
+            updateDbStatus(true);
+
+            // Test connection by checking if we can query
+            console.log("Testing Supabase connection...");
+
+            // Load products from Supabase
+            await loadProductsFromSupabase();
+
+            // Load recent bills
+            await loadRecentBills();
+
+            console.log("Supabase connected successfully");
+            showNotification("Connected to Supabase database!", "success");
+            return true;
+          } catch (error) {
+            console.error("Error initializing Supabase:", error);
+            updateDbStatus(false);
+            showNotification(
+              "Failed to connect to Supabase: " + error.message,
+              "error"
+            );
+            return false;
+          }
+        } else {
+          updateDbStatus(false);
+          return false;
+        }
+      }
+
+      // Update database connection status
+      function updateDbStatus(connected) {
+        isConnected = connected;
+        const dbStatus = document.getElementById("dbStatus");
+        const statusDot = dbStatus.querySelector(".status-dot");
+        const statusText = dbStatus.querySelector("span");
+
+        if (connected) {
+          dbStatus.className = "db-status connected";
+          statusDot.className = "status-dot connected";
+          statusText.textContent = "Supabase: Connected";
+        } else {
+          dbStatus.className = "db-status disconnected";
+          statusDot.className = "status-dot disconnected";
+          statusText.textContent = "Supabase: Disconnected";
+        }
+      }
+
+      // Show notification
+      function showNotification(message, type = "success") {
+        const notification = document.getElementById("notification");
+        const icon = notification.querySelector("i");
+        const text = notification.querySelector("span");
+
+        notification.className = `notification ${type}`;
+        text.textContent = message;
+
+        if (type === "success") {
+          icon.className = "fas fa-check-circle";
+        } else if (type === "error") {
+          icon.className = "fas fa-exclamation-circle";
+        } else {
+          icon.className = "fas fa-info-circle";
+        }
+
+        notification.classList.add("show");
+
+        setTimeout(() => {
+          notification.classList.remove("show");
+        }, 3000);
+      }
+
+      // Load products from Supabase
+      async function loadProductsFromSupabase() {
+        if (!supabase) {
+          console.log("Supabase not initialized");
+          return;
+        }
+
+        try {
+          console.log("Fetching products from Supabase...");
+          const { data: products, error } = await supabase
+            .from("products")
+            .select("*")
+            .eq("is_active", true)
+            .order("category")
+            .order("product_name");
+
+          if (error) {
+            console.error("Error loading products:", error);
+            showNotification(
+              "Failed to load products: " + error.message,
+              "error"
+            );
+            return;
+          }
+
+          if (products && products.length > 0) {
+            allProducts = products;
+            updateProductCatalog(products);
+            updateGlobalDatalists(products);
+            console.log(`Loaded ${products.length} products from Supabase`);
+            showNotification(`Loaded ${products.length} products`, "success");
+          } else {
+            console.log("No products found in database");
+            showNotification("No products found in database", "warning");
+          }
+        } catch (error) {
+          console.error("Error loading products:", error);
+          showNotification("Failed to load products from database", "error");
+        }
+      }
+
+      // Update product catalog with data from Supabase
+      function updateProductCatalog(products) {
+        const catalogCard = document.querySelector(".catalog-card");
+        if (!catalogCard) {
+          console.error("Catalog card element not found");
+          return;
+        }
+
+        // Group products by category
+        const productsByCategory = {};
+        products.forEach((product) => {
+          if (!productsByCategory[product.category]) {
+            productsByCategory[product.category] = [];
+          }
+          productsByCategory[product.category].push(product);
+        });
+
+        // Get category icons
+        const categoryIcons = {
+          Cakes: "fa-birthday-cake",
+          Pastries: "fa-cookie-bite",
+          Decorations: "fa-gift",
+          Beverages: "fa-coffee",
+        };
+
+        // Generate HTML for each category
+        let catalogHTML =
+          '<h3><i class="fas fa-boxes"></i> Product Catalog</h3>';
+
+        // Sort categories for consistent display
+        const sortedCategories = Object.keys(productsByCategory).sort();
+
+        sortedCategories.forEach((category) => {
+          const icon = categoryIcons[category] || "fa-box";
+          catalogHTML += `
+        <div class="product-category">
+          <div class="category-title"><i class="fas ${icon}"></i> ${category}</div>
+      `;
+
+          productsByCategory[category].forEach((product) => {
+            catalogHTML += `
+          <div class="product-item" 
+               data-code="${product.product_code}" 
+               data-name="${product.product_name}" 
+               data-price="${product.unit_price}"
+               data-category="${product.category}"
+               title="${product.description || ""}"
+               tabindex="0">
+            <div class="product-icon">
+              <i class="fas ${getProductIcon(product.category)}"></i>
+            </div>
+            <div class="product-details">
+              <h4>${product.product_name}</h4>
+              <div class="product-code">${product.product_code}</div>
+              ${
+                product.stock_quantity
+                  ? `<div style="font-size: 10px; color: #666;">Stock: ${product.stock_quantity}</div>`
+                  : ""
+              }
+            </div>
+            <div class="product-price">₹${parseFloat(
+              product.unit_price
+            ).toFixed(2)}</div>
+          </div>
+        `;
+          });
+
+          catalogHTML += `</div>`;
+        });
+
+        catalogCard.innerHTML = catalogHTML;
+
+        // Add keyboard support to product items
+        document.querySelectorAll(".product-item").forEach((item) => {
+          item.addEventListener("click", function () {
+            const code = this.dataset.code;
+            const name = this.dataset.name;
+            const price = parseFloat(this.dataset.price);
+            addItemRow(code, name, price, 1);
+            showNotification(`${name} added to order`, "success");
+          });
+
+          item.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              const code = this.dataset.code;
+              const name = this.dataset.name;
+              const price = parseFloat(this.dataset.price);
+              addItemRow(code, name, price, 1);
+              showNotification(`${name} added to order`, "success");
+            }
+          });
+        });
+      }
+
+      // Update global datalists with all products
+      function updateGlobalDatalists(products) {
+        const productNamesDatalist =
+          document.getElementById("globalProductNames");
+        const productCodesDatalist =
+          document.getElementById("globalProductCodes");
+
+        if (productNamesDatalist && productCodesDatalist) {
+          // Clear existing options
+          productNamesDatalist.innerHTML = "";
+          productCodesDatalist.innerHTML = "";
+
+          // Add all products to datalists
+          products.forEach((product) => {
+            const nameOption = document.createElement("option");
+            nameOption.value = product.product_name;
+            nameOption.setAttribute("data-code", product.product_code);
+            nameOption.textContent = `${product.product_code} - ₹${product.unit_price}`;
+            productNamesDatalist.appendChild(nameOption);
+
+            const codeOption = document.createElement("option");
+            codeOption.value = product.product_code;
+            codeOption.textContent = `${product.product_name} - ₹${product.unit_price}`;
+            productCodesDatalist.appendChild(codeOption);
+          });
+
+          console.log(
+            `Updated global datalists with ${products.length} products`
+          );
+        }
+      }
+
+      // Helper function to get icon based on category
+      function getProductIcon(category) {
+        const icons = {
+          Cakes: "fa-cookie",
+          Pastries: "fa-pie-chart",
+          Decorations: "fa-sparkles",
+          Beverages: "fa-wine-bottle",
+        };
+        return icons[category] || "fa-box";
+      }
+
+      // Get product by code
+      function getProductByCode(code) {
+        return allProducts.find((product) => product.product_code === code);
+      }
+
+      // Get product by name
+      function getProductByName(name) {
+        return allProducts.find(
+          (product) => product.product_name.toLowerCase() === name.toLowerCase()
+        );
+      }
+
+      // Add new item row
+      function addItemRow(
+        productCode = "",
+        productName = "",
+        price = 0,
+        quantity = 1
+      ) {
+        const tableBody = document.getElementById("itemsTableBody");
+        const rowId = `item-${Date.now()}`;
+
+        // If product code provided, get product details from Supabase
+        if (productCode && allProducts.length > 0) {
+          const product = getProductByCode(productCode);
+          if (product) {
+            productName = product.product_name;
+            price = product.unit_price;
+          }
+        }
+        // If product name provided but no code, try to find by name
+        else if (productName && !productCode && allProducts.length > 0) {
+          const product = getProductByName(productName);
+          if (product) {
+            productCode = product.product_code;
+            price = product.unit_price;
+          }
+        }
+
+        const row = document.createElement("tr");
+        row.className = "item-row";
+        row.id = rowId;
+        row.innerHTML = `
+    <td>
+      <input type="text" class="item-name" value="${productName}" placeholder="Product name" tabindex="0">
+    </td>
+    <td>
+      <input type="text" class="item-code" value="${productCode}" placeholder="e.g., CK-001" tabindex="0">
+    </td>
+    <td>
+      <input type="number" class="item-qty" min="1" value="${quantity}" step="1" tabindex="0">
+    </td>
+    <td>
+      <input type="number" class="item-price" step="0.01" value="${price}" tabindex="0">
+    </td>
+    <td class="item-total">₹${(price * quantity).toFixed(2)}</td>
+    <td>
+      <button type="button" class="remove-item" onclick="removeItem('${rowId}')" tabindex="0">
+        <i class="fas fa-trash"></i>
+      </button>
+    </td>
+  `;
+
+        tableBody.appendChild(row);
+        updateItemRows();
+
+        // Add event listeners
+        const qtyInput = row.querySelector(".item-qty");
+        const codeInput = row.querySelector(".item-code");
+        const nameInput = row.querySelector(".item-name");
+        const priceInput = row.querySelector(".item-price");
+        const removeBtn = row.querySelector(".remove-item");
+
+        // Link inputs to global datalists
+        nameInput.setAttribute("list", "globalProductNames");
+        codeInput.setAttribute("list", "globalProductCodes");
+
+        qtyInput.addEventListener("input", updateItemTotal);
+        priceInput.addEventListener("input", updateItemTotal);
+
+        // When code changes, update name and price from Supabase
+        codeInput.addEventListener("change", function () {
+          const product = getProductByCode(this.value);
+          if (product) {
+            nameInput.value = product.product_name;
+            priceInput.value = product.unit_price;
+            updateItemTotal.call(qtyInput);
+          }
+        });
+
+        // When name changes, update code and price from Supabase
+        nameInput.addEventListener("change", function () {
+          const product = getProductByName(this.value);
+          if (product) {
+            codeInput.value = product.product_code;
+            priceInput.value = product.unit_price;
+            updateItemTotal.call(qtyInput);
+          }
+        });
+
+        // Keyboard navigation for new row
+        [nameInput, codeInput, qtyInput, priceInput].forEach((input, index) => {
+          input.addEventListener("focus", () => {
+            currentItemRow = row;
+            currentItemField = index;
+            highlightCurrentItem();
+          });
+
+          input.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+
+              if (index < 3) {
+                const fields = [nameInput, codeInput, qtyInput, priceInput];
+                fields[index + 1].focus();
+                fields[index + 1].select();
+              } else {
+                addItemRow();
+                setTimeout(() => {
+                  document
+                    .querySelector(".item-row:last-child .item-name")
+                    .focus();
+                }, 50);
+              }
+            }
+
+            if (e.key === "Tab") {
+              e.preventDefault();
+
+              const fields = [nameInput, codeInput, qtyInput, priceInput];
+
+              if (e.shiftKey) {
+                if (index > 0) {
+                  fields[index - 1].focus();
+                } else {
+                  focusField("addItemBtn");
+                }
+              } else {
+                if (index < 3) {
+                  fields[index + 1].focus();
+                } else {
+                  focusField("couponCode");
+                }
+              }
+            }
+          });
+        });
+
+        // Add keyboard support to remove button
+        removeBtn.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            removeItem(rowId);
+          }
+        });
+
+        updateOrderSummary();
+
+        // Auto-focus on the new item
+        currentItemRow = row;
+        currentItemField = 0;
+        highlightCurrentItem();
+        setTimeout(() => {
+          nameInput.focus();
+          nameInput.select();
+        }, 10);
+
+        // Scroll to the new item
+        row.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+        showNotification(
+          "New item added. Press Enter in price field to add another item. Alt+6 for discount.",
+          "info"
+        );
+      }
+
+      // Remove item row
+      function removeItem(rowId) {
+        const row = document.getElementById(rowId);
+        if (row) {
+          const wasCurrent = row === currentItemRow;
+          row.remove();
+          updateItemRows();
+          updateOrderSummary();
+
+          if (wasCurrent) {
+            if (itemRows.length > 0) {
+              currentItemRow = itemRows[0];
+              currentItemField = 0;
+              highlightCurrentItem();
+              focusCurrentItemField();
+            } else {
+              currentItemRow = null;
+              currentItemField = 0;
+              // Focus back on add item button
+              focusField("addItemBtn");
+            }
+          }
+
+          showNotification("Item removed", "info");
+        }
+      }
+
+      // Update item total
+      function updateItemTotal() {
+        const row = this.closest("tr");
+        if (!row) return;
+
+        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+        const price = parseFloat(row.querySelector(".item-price").value) || 0;
+        const total = qty * price;
+
+        row.querySelector(".item-total").textContent = `₹${total.toFixed(2)}`;
+        updateOrderSummary();
+      }
+
+      // Update order summary
+      function updateOrderSummary() {
+        let subtotal = 0;
+        const rows = document.querySelectorAll(".item-row");
+
+        rows.forEach((row) => {
+          const totalText = row.querySelector(".item-total").textContent;
+          const total = parseFloat(totalText.replace("₹", "")) || 0;
+          subtotal += total;
+        });
+
+        const discount = 0; // Could add discount logic
+
+        document.getElementById("subtotal").textContent = `₹${subtotal.toFixed(
+          2
+        )}`;
+        document.getElementById(
+          "discountAmount"
+        ).textContent = `₹${discount.toFixed(2)}`;
+        document.getElementById("grandTotal").textContent = `₹${(
+          subtotal - discount
+        ).toFixed(2)}`;
+      }
+
+      // Generate bill number
+      function generateBillNumber() {
+        const date = new Date();
+        const year = date.getFullYear().toString().slice(-2);
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0");
+        const random = Math.floor(Math.random() * 1000)
+          .toString()
+          .padStart(3, "0");
+        return `BILL-${year}${month}${day}-${random}`;
+      }
+
+      // Get items as JSON array
+      function getItemsAsJSON() {
+        const items = [];
+        document.querySelectorAll(".item-row").forEach((row) => {
+          items.push({
+            code: row.querySelector(".item-code").value,
+            name: row.querySelector(".item-name").value,
+            quantity: parseInt(row.querySelector(".item-qty").value),
+            unit_price: parseFloat(row.querySelector(".item-price").value),
+            total_price: parseFloat(
+              row.querySelector(".item-total").textContent.replace("₹", "")
+            ),
+          });
+        });
+        return JSON.stringify(items);
+      }
+
+      // Get items summary text (for display)
+      function getItemsSummary() {
+        const items = [];
+        document.querySelectorAll(".item-row").forEach((row) => {
+          const name = row.querySelector(".item-name").value;
+          const qty = row.querySelector(".item-qty").value;
+          items.push(`${name} x${qty}`);
+        });
+        return items.join(", ");
+      }
+
+      // Save bill to Supabase
+      async function saveBillToDatabase() {
+        if (!isConnected || !supabase) {
+          showNotification(
+            "Not connected to database. Please setup Supabase first.",
+            "error"
+          );
+          return null;
+        }
+
+        const itemsJSON = getItemsAsJSON();
+        const itemsSummary = getItemsSummary();
+        const subtotal = parseFloat(
+          document.getElementById("subtotal").textContent.replace("₹", "")
+        );
+        const total = parseFloat(
+          document.getElementById("grandTotal").textContent.replace("₹", "")
+        );
+
+        // Check if this is a returning customer
+        const phone = document.getElementById("purchaserPhone").value.trim();
+        const isReturningCustomer = await checkIfReturningCustomer(phone);
+
+        const billData = {
+          bill_number: generateBillNumber(),
+          purchaser_name: document.getElementById("purchaserName").value,
+          birthday_person_name:
+            document.getElementById("birthdayPersonName").value,
+          purchaser_birthdate:
+            document.getElementById("purchaserBirthdate").value || null,
+          birthday_person_birthdate: document.getElementById(
+            "birthdayPersonBirthdate"
+          ).value,
+          purchaser_phone: phone,
+          birthday_person_phone:
+            document.getElementById("birthdayPersonPhone").value || null,
+          cake_name: itemsJSON, // Store items as JSON in cake_name field
+          cake_price: subtotal, // Use subtotal as cake_price
+          total_price: total,
+          coupon_code: document.getElementById("couponCode").value || null,
+          created_at: new Date().toISOString(),
+          is_returning_customer: isReturningCustomer,
+          last_visit_date: new Date().toISOString(),
+        };
+
+        console.log("Saving bill data:", billData);
+
+        try {
+          const { data, error } = await supabase
+            .from("cake_bills")
+            .insert([billData])
+            .select();
+
+          if (error) {
+            console.error("Error saving bill:", error);
+            showNotification("Failed to save bill: " + error.message, "error");
+            return null;
+          }
+
+          showNotification(
+            `Bill #${billData.bill_number} saved successfully!`,
+            "success"
+          );
+          loadRecentBills();
+          return data[0];
+        } catch (error) {
+          console.error("Error saving bill:", error);
+          showNotification("Failed to save bill: " + error.message, "error");
+          return null;
+        }
+      }
+
+      // Check if customer exists
+      async function checkIfReturningCustomer(phoneNumber) {
+        if (!isConnected || !supabase) {
+          console.log("Supabase not connected");
+          return false;
+        }
+
+        try {
+          const { data, error } = await supabase
+            .from("cake_bills")
+            .select("purchaser_phone")
+            .eq("purchaser_phone", phoneNumber.trim())
+            .limit(1);
+
+          if (error) {
+            console.error("Error checking customer:", error);
+            return false;
+          }
+
+          console.log("Customer check result:", data);
+          return data && data.length > 0;
+        } catch (error) {
+          console.error("Error checking customer:", error);
+          return false;
+        }
+      }
+
+      // Check returning customer
+      async function checkReturningCustomer(phoneNumber) {
+        console.log("checkReturningCustomer called with:", phoneNumber);
+
+        if (!isConnected || !supabase) {
+          console.log("Supabase not connected");
+          showNotification("Database not connected", "error");
+          return null;
+        }
+
+        if (!phoneNumber || phoneNumber.trim().length < 5) {
+          console.log("Phone number too short:", phoneNumber);
+          return null;
+        }
+
+        try {
+          console.log("Querying Supabase for phone:", phoneNumber.trim());
+
+          const { data, error } = await supabase
+            .from("cake_bills")
+            .select("*")
+            .eq("purchaser_phone", phoneNumber.trim())
+            .order("created_at", { ascending: false })
+            .limit(1);
+
+          if (error) {
+            console.error("Error checking customer:", error);
+            showNotification("Database error: " + error.message, "error");
+            return null;
+          }
+
+          console.log("Query result:", data);
+
+          if (data && data.length > 0) {
+            console.log("Found customer:", data[0]);
+            return data[0];
+          }
+
+          console.log("No customer found");
+          return null;
+        } catch (error) {
+          console.error("Error checking customer:", error);
+          showNotification("Error checking customer", "error");
+          return null;
+        }
+      }
+
+      // Load recent bills from Supabase
+      async function loadRecentBills() {
+        if (!isConnected || !supabase) {
+          console.log("Cannot load bills: Supabase not connected");
+          return;
+        }
+
+        try {
+          const { data, error } = await supabase
+            .from("cake_bills")
+            .select(
+              "bill_number, cake_name, total_price, created_at, purchaser_name"
+            )
+            .order("created_at", { ascending: false })
+            .limit(5);
+
+          if (error) {
+            console.error("Error loading bills:", error);
+            return;
+          }
+
+          const billsList = document.getElementById("recentBillsList");
+          const billsCount = document.getElementById("recentBillsCount");
+
+          if (data && data.length > 0) {
+            billsList.innerHTML = "";
+            data.forEach((bill) => {
+              const billDate = new Date(bill.created_at).toLocaleDateString();
+              let cakeName = "Multiple Items";
+
+              try {
+                const items = JSON.parse(bill.cake_name);
+                if (Array.isArray(items) && items.length > 0) {
+                  cakeName =
+                    items.length === 1
+                      ? items[0].name
+                      : `${items.length} items`;
+                }
+              } catch (e) {
+                // If not JSON, use as-is
+                cakeName = bill.cake_name || "Order";
+              }
+
+              const billItem = document.createElement("div");
+              billItem.className = "order-item";
+              billItem.innerHTML = `
+            <div class="order-products">
+              <div>${bill.purchaser_name}</div>
+              <div style="font-size: 12px; color: #666;">${cakeName}</div>
+            </div>
+            <div class="order-price">₹${parseFloat(bill.total_price).toFixed(
+              2
+            )}</div>
+          `;
+              billsList.appendChild(billItem);
+            });
+
+            billsCount.textContent = data.length;
+          } else {
+            billsList.innerHTML =
+              '<div class="order-item"><div class="order-products">No bills yet</div><div class="order-price">$0.00</div></div>';
+            billsCount.textContent = "0";
+          }
+        } catch (error) {
+          console.error("Error loading bills:", error);
+        }
+      }
+
+      // Auto-fill customer form
+      function autoFillCustomerForm(customerData) {
+        console.log("Auto-filling form with:", customerData);
+
+        // Fill purchaser name
+        if (customerData.purchaser_name) {
+          document.getElementById("purchaserName").value =
+            customerData.purchaser_name;
+        }
+
+        // Fill birthday person name
+        if (customerData.birthday_person_name) {
+          document.getElementById("birthdayPersonName").value =
+            customerData.birthday_person_name;
+        }
+
+        // Fill birthday person phone
+        if (customerData.birthday_person_phone) {
+          document.getElementById("birthdayPersonPhone").value =
+            customerData.birthday_person_phone;
+        }
+
+        // Fill purchaser birthdate
+        if (customerData.purchaser_birthdate) {
+          document.getElementById("purchaserBirthdate").value =
+            customerData.purchaser_birthdate;
+        }
+
+        // Fill birthday person birthdate
+        if (customerData.birthday_person_birthdate) {
+          document.getElementById("birthdayPersonBirthdate").value =
+            customerData.birthday_person_birthdate;
+        }
+
+        updateOrderSummary();
+
+        showNotification(
+          "Customer details auto-filled successfully!",
+          "success"
+        );
+
+        // Focus on next field
+        setTimeout(() => {
+          focusField("birthdayPersonPhone");
+        }, 100);
+      }
+
+      // Manual check for returning customers
+      async function manualCheckCustomer() {
+        console.log("manualCheckCustomer called");
+
+        const phoneNumber = document
+          .getElementById("purchaserPhone")
+          .value.trim();
+        console.log("Phone number:", phoneNumber);
+
+        if (!phoneNumber) {
+          showNotification("Please enter a phone number first", "error");
+          return;
+        }
+
+        const returningCustomer = await checkReturningCustomer(phoneNumber);
+
+        if (returningCustomer) {
+          autoFillCustomerForm(returningCustomer);
+
+          const customerInfoDiv = document.getElementById("customerInfo");
+          customerInfoDiv.innerHTML = `
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid var(--success);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <strong style="color: var(--success);">
+              <i class="fas fa-user-check"></i> Returning Customer Found
+            </strong>
+          </div>
+          <div style="font-size: 14px;">
+            <div><strong>Name:</strong> ${
+              returningCustomer.purchaser_name
+            }</div>
+            <div><strong>Last Order Total:</strong> $${
+              returningCustomer.total_price
+            }</div>
+            <div><strong>Last Visit:</strong> ${new Date(
+              returningCustomer.last_visit_date || returningCustomer.created_at
+            ).toLocaleDateString()}</div>
+          </div>
+        </div>
+      `;
+          customerInfoDiv.style.display = "block";
+
+          showNotification(
+            `Welcome back ${returningCustomer.purchaser_name}! Details auto-filled.`,
+            "success"
+          );
+        } else {
+          const customerInfoDiv = document.getElementById("customerInfo");
+          customerInfoDiv.innerHTML = `
+        <div style="background-color: #fff3cd; padding: 15px; border-radius: 10px; border-left: 4px solid var(--warning); color: #856404;">
+          <strong><i class="fas fa-user-plus"></i> New Customer</strong>
+          <div style="font-size: 14px; margin-top: 5px;">No previous orders found with this phone number.</div>
+        </div>
+      `;
+          customerInfoDiv.style.display = "block";
+          showNotification(
+            "No previous customer found with this phone number",
+            "info"
+          );
+
+          // Focus on next field for new customer
+          setTimeout(() => {
+            focusField("purchaserName");
+          }, 100);
+        }
+      }
+
+      // Refresh products from Supabase
+      async function refreshProducts() {
+        if (!isConnected || !supabase) {
+          showNotification("Not connected to database", "error");
+          return;
+        }
+
+        showNotification("Refreshing products...", "info");
+        await loadProductsFromSupabase();
+      }
+
+      // Initialize when page loads
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Supabase
+        initSupabase();
+
+        // Set today's date as default for birthday
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("birthdayPersonBirthdate").value = today;
+
+        // Add global datalists to HTML
+        if (!document.getElementById("globalProductNames")) {
+          const nameDatalist = document.createElement("datalist");
+          nameDatalist.id = "globalProductNames";
+          document.body.appendChild(nameDatalist);
+
+          const codeDatalist = document.createElement("datalist");
+          codeDatalist.id = "globalProductCodes";
+          document.body.appendChild(codeDatalist);
+        }
+
+        // Initialize keyboard navigation
+        setTimeout(() => {
+          initializeKeyboardNavigation();
+          // Focus on first field
+          focusField("purchaserPhone");
+        }, 100);
+
+        // Add item button
+        const addItemBtn = document.getElementById("addItemBtn");
+        if (addItemBtn) {
+          addItemBtn.addEventListener("click", function () {
+            addItemRow();
+          });
+
+          // Make button keyboard accessible
+          addItemBtn.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              addItemRow();
+            }
+          });
+        }
+
+        // Check customer button
+        const checkCustomerBtn = document.getElementById("checkCustomerBtn");
+        if (checkCustomerBtn) {
+          checkCustomerBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            manualCheckCustomer();
+          });
+
+          checkCustomerBtn.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              manualCheckCustomer();
+            }
+          });
+        }
+
+        // Submit form
+        const submitBillBtn = document.getElementById("submitBill");
+        if (submitBillBtn) {
+          submitBillBtn.addEventListener("click", async function (e) {
+            e.preventDefault();
+
+            // Validate form
+            const customerName = document.getElementById("purchaserName").value;
+            const customerPhone =
+              document.getElementById("purchaserPhone").value;
+            const birthdayPersonName =
+              document.getElementById("birthdayPersonName").value;
+            const birthdayPersonBirthdate = document.getElementById(
+              "birthdayPersonBirthdate"
+            ).value;
+            const items = document.querySelectorAll(".item-row");
+
+            if (
+              !customerName ||
+              !customerPhone ||
+              !birthdayPersonName ||
+              !birthdayPersonBirthdate
+            ) {
+              showNotification("Please fill in all required fields", "error");
+              focusField("purchaserPhone");
+              return;
+            }
+
+            if (items.length === 0) {
+              showNotification("Please add at least one item", "error");
+              addItemRow();
+              return;
+            }
+
+            // Validate all items have valid product codes
+            let validItems = true;
+            document.querySelectorAll(".item-row").forEach((row) => {
+              const code = row.querySelector(".item-code").value;
+              const name = row.querySelector(".item-name").value;
+              const price = parseFloat(row.querySelector(".item-price").value);
+
+              if (!code && !name) {
+                row.style.border = "2px solid var(--danger)";
+                validItems = false;
+              } else if (price <= 0) {
+                row.style.border = "2px solid var(--warning)";
+                validItems = false;
+              } else {
+                row.style.border = "";
+              }
+            });
+
+            if (!validItems) {
+              showNotification(
+                "Please check all items have valid product codes and prices",
+                "error"
+              );
+              if (currentItemRow) {
+                focusCurrentItemField();
+              }
+              return;
+            }
+
+            // Save bill
+            const savedBill = await saveBillToDatabase();
+            if (savedBill) {
+              lastCustomerData = savedBill;
+
+              // Generate receipt
+              const itemsText = getItemsSummary();
+              const receipt = `
+╔══════════════════════════════════════════╗
+║           🎂 CAKE BLISS RECEIPT 🎂        ║
+╠══════════════════════════════════════════╣
+║ Bill #: ${savedBill.bill_number}
+║ Date: ${new Date().toLocaleString()}
+╠══════════════════════════════════════════╣
+║ Customer: ${customerName}
+║ Phone: ${customerPhone}
+║ Birthday Person: ${birthdayPersonName}
+╠══════════════════════════════════════════╣
+║ ITEMS: ${itemsText}
+╠══════════════════════════════════════════╣
+║ Subtotal: ₹${parseFloat(
+                document.getElementById("subtotal").textContent.replace("₹", "")
+              ).toFixed(2)}
+║ Total: ₹${parseFloat(
+                document
+                  .getElementById("grandTotal")
+                  .textContent.replace("₹", "")
+              ).toFixed(2)}
+╚══════════════════════════════════════════╝
+          `;
+
+              alert(receipt);
+
+              // Reset form
+              document.getElementById("billingForm").reset();
+              document.getElementById("itemsTableBody").innerHTML = "";
+              updateOrderSummary();
+              document.getElementById("birthdayPersonBirthdate").value = today;
+
+              const customerInfoDiv = document.getElementById("customerInfo");
+              if (customerInfoDiv) {
+                customerInfoDiv.style.display = "none";
+              }
+
+              updateItemRows();
+              currentItemRow = null;
+              currentItemField = 0;
+
+              setTimeout(() => {
+                focusField("purchaserPhone");
+              }, 100);
+            }
+          });
+        }
+
+        // Reset form
+        const resetFormBtn = document.getElementById("resetForm");
+        if (resetFormBtn) {
+          resetFormBtn.addEventListener("click", function () {
+            if (
+              confirm(
+                "Are you sure you want to reset the form? (Press Enter to confirm, Esc to cancel)"
+              )
+            ) {
+              document.getElementById("billingForm").reset();
+              document.getElementById("itemsTableBody").innerHTML = "";
+              updateOrderSummary();
+              document.getElementById("birthdayPersonBirthdate").value = today;
+
+              const customerInfoDiv = document.getElementById("customerInfo");
+              if (customerInfoDiv) {
+                customerInfoDiv.style.display = "none";
+              }
+
+              updateItemRows();
+              currentItemRow = null;
+              currentItemField = 0;
+
+              setTimeout(() => {
+                focusField("purchaserPhone");
+              }, 100);
+
+              showNotification("Form reset", "info");
+            }
+          });
+
+          resetFormBtn.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              this.click();
+            }
+          });
+        }
+
+        // Database setup
+        const setupDbBtn = document.getElementById("setupDbBtn");
+        if (setupDbBtn) {
+          setupDbBtn.addEventListener("click", function () {
+            const dbInfoModal = document.getElementById("dbInfoModal");
+            if (dbInfoModal) {
+              dbInfoModal.style.display = "flex";
+              document.getElementById("sbUrlInput").value = config.supabaseUrl;
+              document.getElementById("sbKeyInput").value = config.supabaseKey;
+
+              // Focus on first input in modal
+              setTimeout(() => {
+                document.getElementById("sbUrlInput")?.focus();
+              }, 100);
+            }
+          });
+        }
+
+        const closeDbModal = document.getElementById("closeDbModal");
+        if (closeDbModal) {
+          closeDbModal.addEventListener("click", function () {
+            const dbInfoModal = document.getElementById("dbInfoModal");
+            if (dbInfoModal) {
+              dbInfoModal.style.display = "none";
+              focusField("purchaserPhone");
+            }
+          });
+
+          closeDbModal.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              this.click();
+            }
+          });
+        }
+
+        const saveDbConfig = document.getElementById("saveDbConfig");
+        if (saveDbConfig) {
+          saveDbConfig.addEventListener("click", function () {
+            const url = document.getElementById("sbUrlInput").value;
+            const key = document.getElementById("sbKeyInput").value;
+
+            if (url && key) {
+              config.supabaseUrl = url;
+              config.supabaseKey = key;
+              localStorage.setItem("cakeBlissConfig", JSON.stringify(config));
+
+              if (initSupabase()) {
+                showNotification(
+                  "Database configuration saved successfully!",
+                  "success"
+                );
+                const dbInfoModal = document.getElementById("dbInfoModal");
+                if (dbInfoModal) {
+                  dbInfoModal.style.display = "none";
+                  focusField("purchaserPhone");
+                }
+              }
+            } else {
+              showNotification("Please enter both URL and Key", "error");
+            }
+          });
+
+          saveDbConfig.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              this.click();
+            }
+          });
+        }
+
+        // Add help button to footer
+        const footerLinks = document.querySelector(".footer-links");
+        if (footerLinks) {
+          const helpLink = document.createElement("a");
+          helpLink.href = "#";
+          helpLink.innerHTML =
+            '<i class="fas fa-keyboard"></i> Keyboard Help (F1)';
+          helpLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            showKeyboardHelp();
+          });
+
+          helpLink.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              showKeyboardHelp();
+            }
+          });
+
+          footerLinks.appendChild(helpLink);
+        }
+
+        // Show welcome message with keyboard tips
+        setTimeout(() => {
+          showNotification(
+            "Press F1 for keyboard shortcuts. Use Tab to navigate.",
+            "info"
+          );
+        }, 1500);
+      });
+    </script>
+  </body>
+</html>

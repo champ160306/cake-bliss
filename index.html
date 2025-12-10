@@ -1,0 +1,1275 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cake Bliss | Complete Bakery Management Solution</title>
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <style>
+            * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary: #323336;
+    --secondary: #020304;
+    --accent: #9bc53d;
+    --light: #f8f9fa;
+    --dark: #020202;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --gradient: linear-gradient(135deg, #4a6fa5 0%, #166088 100%);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+/* Navigation */
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 20px 40px;
+    box-shadow: var(--shadow);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(74, 111, 165, 0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.logo-text h2 {
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.logo-text p {
+    font-size: 12px;
+    color: #666;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--dark);
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: rgba(74, 111, 165, 0.1);
+    color: var(--primary);
+}
+
+.cta-button {
+    background: var(--gradient);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(74, 111, 165, 0.3);
+}
+
+/* Hero Section */
+.hero {
+    padding: 160px 40px 100px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(74, 111, 165, 0.03)"/></svg>');
+    background-size: cover;
+}
+
+.hero h1 {
+    font-size: 48px;
+    color: var(--dark);
+    margin-bottom: 20px;
+    line-height: 1.2;
+    position: relative;
+}
+
+.hero p {
+    font-size: 20px;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    position: relative;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+    position: relative;
+}
+
+.hero-image {
+    max-width: 800px;
+    margin: 50px auto 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: none;
+    position: relative;
+}
+
+.hero-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Features Section */
+.features {
+    padding: 100px 40px;
+    background: var(--light);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    font-size: 36px;
+    color: var(--dark);
+    margin-bottom: 15px;
+}
+
+.section-title p {
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: var(--card-bg);
+    padding: 40px 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s;
+    border: 1px solid #e9ecef;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    margin: 0 auto 25px;
+}
+
+.feature-card h3 {
+    font-size: 22px;
+    color: var(--dark);
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: #666;
+}
+
+/* Pricing Section */
+.pricing {
+    padding: 100px 40px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.pricing-card {
+    background: var(--card-bg);
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 12px;
+    padding: 60px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.pricing-badge {
+    position: absolute;
+    top: 30px;
+    right: -60px;
+    background: var(--accent);
+    color: var(--dark);
+    padding: 10px 70px;
+    transform: rotate(45deg);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.pricing-header {
+    margin-bottom: 40px;
+}
+
+.pricing-header h3 {
+    font-size: 32px;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.pricing-header p {
+    color: #666;
+    font-size: 18px;
+}
+
+.price-tag {
+    font-size: 72px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.price-period {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 40px;
+}
+
+.price-breakdown {
+    background: var(--light);
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.price-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.price-item:last-child {
+    border-bottom: none;
+}
+
+.price-item .label {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.price-item .value {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 20px;
+}
+
+.total-price {
+    background: var(--gradient);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pricing-features {
+    margin: 40px 0;
+    text-align: left;
+}
+
+.pricing-features h4 {
+    font-size: 22px;
+    color: var(--dark);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.feature-list {
+    list-style: none;
+}
+
+.feature-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.feature-list li:last-child {
+    border-bottom: none;
+}
+
+.feature-list i {
+    color: var(--success);
+    font-size: 20px;
+}
+
+/* Demo Section */
+.demo {
+    padding: 100px 40px;
+    background: var(--card-bg);
+    text-align: center;
+}
+
+.demo-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.demo-video {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 40px;
+    margin: 40px 0;
+    box-shadow: var(--shadow);
+    border: 1px solid #e9ecef;
+}
+
+.demo-placeholder {
+    width: 100%;
+    height: 400px;
+    background: var(--gradient);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* FAQ Section */
+.faq {
+    padding: 100px 40px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: var(--card-bg);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid #e9ecef;
+}
+
+.faq-question {
+    padding: 25px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--light);
+}
+
+.faq-answer {
+    padding: 0 30px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.faq-answer.active {
+    padding: 0 30px 25px;
+    max-height: 500px;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 100px 40px;
+    background: var(--gradient);
+    color: white;
+    text-align: center;
+}
+
+.cta-section h2 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.cta-section p {
+    font-size: 20px;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.cta-secondary {
+    background: white;
+    color: var(--primary);
+    padding: 15px 30px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.cta-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Footer */
+footer {
+    background: var(--dark);
+    color: white;
+    padding: 60px 40px 30px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.footer-column h3 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.contact-info {
+    color: #aaa;
+}
+
+.contact-info p {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero {
+        padding: 180px 20px 60px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 18px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .features,
+    .pricing,
+    .demo,
+    .faq,
+    .cta-section {
+        padding: 60px 20px;
+    }
+
+    .pricing-card {
+        padding: 40px 20px;
+    }
+
+    .price-tag {
+        font-size: 48px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-image {
+        margin: 30px 20px 0;
+    }
+}
+
+/* Responsive Pricing Layout */
+@media (max-width: 992px) {
+    .pricing-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .price-tag {
+        font-size: 48px !important;
+    }
+    
+    .price-tag span {
+        font-size: 24px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .pricing-container {
+        padding: 0 20px;
+    }
+    
+    .pricing-card {
+        padding: 30px 20px !important;
+    }
+    
+    .pricing-features {
+        padding: 30px 20px !important;
+    }
+    
+    .pricing-badge {
+        right: -70px !important;
+        padding: 8px 60px !important;
+        font-size: 12px !important;
+    }
+}
+        </style>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon">
+            <i class="fas fa-birthday-cake"></i>
+            </div>
+            <div class="logo-text">
+            <h2>Cake Bliss</h2>
+            <p>Bakery Management System</p>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="billing.html" class="cta-button">
+            <i class="fas fa-rocket"></i> Try Free Demo
+            </a>
+        </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+        <h1>Transform Your Bakery Business with Smart Automation</h1>
+        <p>
+            Complete billing, inventory management, customer engagement, and
+            analytics platform designed specifically for bakeries and pastry shops
+        </p>
+        <div class="hero-buttons">
+            <a href="#pricing" class="cta-button">
+            <i class="fas fa-tag"></i> View Pricing
+            </a>
+            <a href="#demo" class="cta-secondary">
+            <i class="fas fa-play-circle"></i> Watch Demo
+            </a>
+        </div>
+        <div class="hero-image">
+  <img src="ss.png" alt="Cake Bliss Billing System Interface">
+</div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+        <div class="section-title">
+            <h2>Everything You Need in One Platform</h2>
+            <p>Streamline your bakery operations with our comprehensive features</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-cash-register"></i>
+            </div>
+            <h3>Smart Billing System</h3>
+            <p>
+                Fast, intuitive billing with keyboard shortcuts, multiple items per
+                order, and automatic customer recognition
+            </p>
+            </div>
+            <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h3>Automated WhatsApp Messages</h3>
+            <p>
+                Send order confirmations, delivery updates, and birthday greetings
+                automatically to customers
+            </p>
+            </div>
+            <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3>Advanced Analytics</h3>
+            <p>
+                Get detailed reports on sales, popular items, customer behavior, and
+                business performance
+            </p>
+            </div>
+            <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>Customer Management</h3>
+            <p>
+                Track customer preferences, birthdays, purchase history, and build
+                loyalty programs
+            </p>
+            </div>
+            <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <h3>Inventory Tracking</h3>
+            <p>
+                Real-time stock management, low stock alerts, and automatic
+                reordering suggestions
+            </p>
+            </div>
+            <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3>Mobile Ready</h3>
+            <p>
+                Access your dashboard from any device - desktop, tablet, or
+                smartphone
+            </p>
+            </div>
+        </div>
+        </section>
+        <!-- Pricing Section -->
+        <section class="pricing" id="pricing">
+            <div class="section-title">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>No hidden fees, no surprise charges</p>
+            </div>
+            
+            <div class="pricing-container" style="
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            align-items: stretch;
+            ">
+            <!-- Left Column: What's Included -->
+            <div style="
+                flex: 1;
+                background: white;
+                border-radius: 30px;
+                padding: 40px;
+                box-shadow: var(--shadow);
+            ">
+                <div class="pricing-features">
+                <h4 style="
+                    font-size: 28px;
+                    color: var(--primary);
+                    margin-bottom: 30px;
+                    text-align: left;
+                    border-bottom: 3px solid var(--primary);
+                    padding-bottom: 15px;
+                ">
+                    <i class="fas fa-gift"></i> What's Included
+                </h4>
+                <ul class="feature-list" style="list-style: none;">
+                    <li style="
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">Complete Billing & POS System</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">Fast, intuitive billing with keyboard shortcuts and multi-item support</p>
+                    </div>
+                    </li>
+                    <li style="
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">500 Automated WhatsApp Messages/Month</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">Order confirmations, delivery updates, birthday greetings & reminders</p>
+                    </div>
+                    </li>
+                    <li style="
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">Advanced Analytics & Reports</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">Daily sales, product performance, customer insights & business reports</p>
+                    </div>
+                    </li>
+                    <li style="
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">Customer Relationship Management</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">Track preferences, birthdays, purchase history & build loyalty programs</p>
+                    </div>
+                    </li>
+                    <li style="
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">Inventory Management System</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">Real-time stock tracking, low stock alerts & automatic reordering</p>
+                    </div>
+                    </li>
+                    <li style="
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">24/7 Email & Chat Support</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">Priority support with average response time under 2 hours</p>
+                    </div>
+                    </li>
+                    <li style="
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">Free Lifetime Updates</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">Always get the latest features and security updates</p>
+                    </div>
+                    </li>
+                    <li style="
+                    padding: 15px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    ">
+                    <i class="fas fa-check-circle" style="color: var(--success); font-size: 20px; margin-top: 3px;"></i>
+                    <div>
+                        <strong style="color: var(--dark); font-size: 16px;">Data Migration Assistance</strong>
+                        <p style="color: #666; margin-top: 5px; font-size: 14px;">We'll help you migrate from your existing system</p>
+                    </div>
+                    </li>
+                </ul>
+                </div>
+            </div>
+
+            <!-- Right Column: Pricing Card -->
+            <div style="
+                flex: 1;
+                position: relative;
+            ">
+                <div class="pricing-card" style="
+                background: white;
+                border-radius: 30px;
+                padding: 50px;
+                box-shadow: var(--shadow);
+                text-align: center;
+                height: 100%;
+                position: relative;
+                overflow: hidden;
+                ">
+                <div class="pricing-badge" style="
+                    position: absolute;
+                    top: 30px;
+                    right: -60px;
+                    background: var(--accent);
+                    color: white;
+                    padding: 10px 70px;
+                    transform: rotate(45deg);
+                    font-weight: 600;
+                    font-size: 14px;
+                ">
+                    MOST POPULAR
+                </div>
+                
+                <div class="pricing-header" style="margin-bottom: 30px;">
+                    <h3 style="
+                    font-size: 32px;
+                    color: var(--primary);
+                    margin-bottom: 10px;
+                    ">
+                    Complete Bakery Solution
+                    </h3>
+                    <p style="color: #666; font-size: 18px;">
+                    Everything you need to run your bakery efficiently
+                    </p>
+                </div>
+
+                <div class="price-tag" style="
+                    font-size: 72px;
+                    font-weight: 800;
+                    color: var(--accent);
+                    margin-bottom: 5px;
+                    line-height: 1;
+                ">
+                    ₹1,499<span style="font-size: 36px;">/month</span>
+                </div>
+                
+                <div class="price-period" style="
+                    color: #666;
+                    font-size: 18px;
+                    margin-bottom: 30px;
+                ">
+                    + ₹4,999 one-time setup
+                </div>
+
+                <div class="price-breakdown" style="
+                    background: var(--light);
+                    border-radius: 15px;
+                    padding: 25px;
+                    margin-bottom: 30px;
+                    text-align: left;
+                ">
+                    <div class="price-item" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    ">
+                    <span class="label" style="font-weight: 600; color: var(--dark);">One-time Setup Cost</span>
+                    <span class="value" style="font-weight: 700; color: var(--accent); font-size: 20px;">₹4,999</span>
+                    </div>
+                    <div class="price-item" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 0;
+                    ">
+                    <span class="label" style="font-weight: 600; color: var(--dark);">Monthly Subscription</span>
+                    <span class="value" style="font-weight: 700; color: var(--accent); font-size: 20px;">₹1,499/month</span>
+                    </div>
+                    
+                    
+                </div>
+
+                <div class="hero-buttons" style="margin: 30px 0;">
+                    <a href="billing.html" class="cta-button" style="padding: 18px 40px; margin: 10px 0; display: inline-block;">
+                    <i class="fas fa-shopping-cart"></i> Get Started Now
+                    </a>
+                    <br>
+                    <a href="#demo" class="cta-secondary" style="
+                    padding: 18px 40px;
+                    background: white;
+                    color: var(--primary);
+                    border-radius: 50px;
+                    font-weight: 600;
+                    text-decoration: none;
+                    transition: all 0.3s;
+                    display: inline-block;
+                    margin: 10px 0;
+                    border: 2px solid var(--primary);
+                    ">
+                    <i class="fas fa-comments"></i> Schedule a Demo
+                    </a>
+                </div>
+
+                <div style="margin-top: 30px; color: #666; font-size: 14px;">
+                    <p>
+                    <i class="fas fa-shield-alt"></i> 7-day money-back guarantee
+                    </p>
+                    <p style="margin-top: 10px;">
+                    <i class="fas fa-file-contract"></i> No long-term contract required
+                    </p>
+                    <p style="margin-top: 10px;">
+                    <i class="fas fa-sync-alt"></i> Cancel anytime
+                    </p>
+                </div>
+                </div>
+            </div>
+            </div>
+
+        </section>
+
+
+        <!-- FAQ Section -->
+        <section class="faq" id="faq">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Get answers to common questions about Cake Bliss</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(2)">
+                <span>What's included in the setup cost?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" id="faq2">
+                <p>
+                The ₹4,999 setup cost includes: system configuration for your
+                bakery, data migration assistance (if needed), staff training
+                sessions, WhatsApp Business API setup, and custom report
+                configuration.
+                </p>
+            </div>
+            </div>
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(3)">
+                <span>How do WhatsApp messages work?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" id="faq3">
+                <p>
+                We integrate with WhatsApp Business API to automatically send:
+                order confirmations, delivery updates, birthday greetings, payment
+                reminders, and promotional messages. You get 500 messages included
+                monthly.
+                </p>
+            </div>
+            </div>
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(4)">
+                <span>Can I cancel anytime?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" id="faq4">
+                <p>
+                Yes! There's no long-term contract. You can cancel your monthly
+                subscription anytime. The setup fee is non-refundable after 30
+                days.
+                </p>
+            </div>
+            </div>
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(5)">
+                <span>Do I need technical knowledge to use it?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" id="faq5">
+                <p>
+                Not at all! Cake Bliss is designed for bakery owners and staff.
+                We provide complete training and the interface is intuitive.
+                You'll be up and running in less than a day.
+                </p>
+            </div>
+            </div>
+            <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(6)">
+                <span>What about data security?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" id="faq6">
+                <p>
+                Your data is secured with enterprise-grade encryption, regular
+                backups, and secure cloud hosting. We never share your customer
+                data with third parties.
+                </p>
+            </div>
+            </div>
+        </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section" id="contact">
+        <h2>Ready to Transform Your Bakery Business?</h2>
+        <p>
+            Join 500+ bakeries already using Cake Bliss to streamline their
+            operations and grow their business
+        </p>
+        <div class="cta-buttons">
+            <a href="billing.html" class="cta-button" style="padding: 18px 40px">
+            <i class="fas fa-rocket"></i> Start Free Demo
+            </a>
+            <a
+            href="mailto:sales@cakebliss.com?subject=Demo%20Request"
+            class="cta-secondary"
+            style="padding: 18px 40px"
+            >
+            <i class="fas fa-envelope"></i> Contact Sales
+            </a>
+        </div>
+        <div style="margin-top: 40px; font-size: 16px; opacity: 0.8">
+            <p>
+            <i class="fas fa-phone-alt"></i> Call us: +91 9168281183 • Email:
+            parthdarda642@gmail.com
+            </p>
+        </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+            <h3>Cake Bliss</h3>
+            <p style="color: #aaa; margin-bottom: 20px">
+                Complete bakery management solution for modern bakeries and pastry
+                shops.
+            </p>
+            <div style="display: flex; gap: 15px; margin-top: 20px">
+                <a
+                href="#"
+                style="color: #aaa; font-size: 20px"
+                onmouseover="this.style.color='#ff7bac'"
+                onmouseout="this.style.color='#aaa'"
+                ><i class="fab fa-facebook"></i
+                ></a>
+                <a
+                href="#"
+                style="color: #aaa; font-size: 20px"
+                onmouseover="this.style.color='#ff7bac'"
+                onmouseout="this.style.color='#aaa'"
+                ><i class="fab fa-instagram"></i
+                ></a>
+                <a
+                href="#"
+                style="color: #aaa; font-size: 20px"
+                onmouseover="this.style.color='#ff7bac'"
+                onmouseout="this.style.color='#aaa'"
+                ><i class="fab fa-twitter"></i
+                ></a>
+                <a
+                href="#"
+                style="color: #aaa; font-size: 20px"
+                onmouseover="this.style.color='#ff7bac'"
+                onmouseout="this.style.color='#aaa'"
+                ><i class="fab fa-youtube"></i
+                ></a>
+            </div>
+            </div>
+            <div class="footer-column">
+            <h3>Contact Us</h3>
+            <div class="contact-info">
+                <p><i class="fas fa-map-marker-alt"></i> Nashik, India</p>
+                <p><i class="fas fa-phone"></i> +91 9168281183</p>
+                <p><i class="fas fa-envelope"></i> parthdarda642@gmail.com</p>
+            </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Cake Bliss. All rights reserved.</p>
+        </div>
+        </footer>
+
+        <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href");
+            if (targetId === "#") return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: "smooth",
+                });
+            }
+            });
+        });
+
+        // FAQ toggle functionality
+        function toggleFAQ(id) {
+            const answer = document.getElementById("faq" + id);
+            const icon = answer.previousElementSibling.querySelector("i");
+
+            // Close all other FAQs
+            document.querySelectorAll(".faq-answer").forEach((faq) => {
+            if (faq.id !== "faq" + id) {
+                faq.classList.remove("active");
+                faq.previousElementSibling.querySelector("i").className =
+                "fas fa-chevron-down";
+            }
+            });
+
+            // Toggle current FAQ
+            answer.classList.toggle("active");
+            icon.className = answer.classList.contains("active")
+            ? "fas fa-chevron-up"
+            : "fas fa-chevron-down";
+        }
+
+        // Initialize all FAQs as closed
+        document.querySelectorAll(".faq-answer").forEach((faq) => {
+            faq.classList.remove("active");
+        });
+
+        // Navbar scroll effect
+        window.addEventListener("scroll", function () {
+            const navbar = document.querySelector(".navbar");
+            if (window.scrollY > 100) {
+            navbar.style.boxShadow = "0 5px 20px rgba(0, 0, 0, 0.1)";
+            } else {
+            navbar.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.08)";
+            }
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+            }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll(".feature-card, .pricing-card").forEach(
+            (el) => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            observer.observe(el);
+            }
+        );
+        </script>
+    </body>
+    </html>
